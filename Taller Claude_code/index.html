@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BuubleCorp | Ropa con actitud</title>
+    <meta name="description" content="BuubleCorp: ropa con actitud para quienes se visten distinto.">
+    <style>
+        :root {
+            --bg: #07060d;
+            --panel: rgba(255, 255, 255, .06);
+            --line: rgba(255, 255, 255, .18);
+            --text: #f4f2ff;
+            --muted: #a9a4c4;
+            --btn: #fff;
+            --btn-text: #0b0b12;
+            --a1: #8b5cf6;
+            --a2: #ff8a3d;
+            --a3: #38bdf8;
+            --field: #e8edf8;
+        }
+
+        :root[data-theme="light"] {
+            --bg: #fbfaff;
+            --panel: rgba(255, 255, 255, .75);
+            --line: rgba(20, 20, 40, .14);
+            --text: #12111c;
+            --muted: #5d5875;
+            --btn: #12111c;
+            --btn-text: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background .5s, color .5s
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--a3);
+            outline-offset: 3px;
+            border-radius: 8px
+        }
+
+        /* fondo con burbujas iridiscentes */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden
+        }
+
+        .bg i {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(70px);
+            opacity: .55;
+            animation: drift 18s ease-in-out infinite alternate
+        }
+
+        .bg i:nth-child(1) {
+            width: 420px;
+            height: 420px;
+            background: var(--a1);
+            top: -120px;
+            left: -100px
+        }
+
+        .bg i:nth-child(2) {
+            width: 380px;
+            height: 380px;
+            background: var(--a2);
+            top: 35%;
+            right: -140px;
+            animation-delay: -6s
+        }
+
+        .bg i:nth-child(3) {
+            width: 340px;
+            height: 340px;
+            background: var(--a3);
+            bottom: -120px;
+            left: 25%;
+            animation-delay: -11s
+        }
+
+        [data-theme="light"] .bg i {
+            opacity: .28
+        }
+
+        @keyframes drift {
+            to {
+                transform: translate(70px, -50px) scale(1.2)
+            }
+        }
+
+        .shell {
+            width: min(1120px, calc(100% - 28px));
+            margin: 14px auto 0
+        }
+
+        .glass {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 28px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px)
+        }
+
+        /* navegación */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 26px;
+            font-size: .85rem
+        }
+
+        .brand {
+            font-weight: 800;
+            letter-spacing: .02em;
+            font-size: 1.05rem
+        }
+
+        .links {
+            display: flex;
+            gap: 26px
+        }
+
+        .links a {
+            color: var(--muted);
+            position: relative;
+            transition: color .2s
+        }
+
+        .links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            height: 2px;
+            width: 0;
+            background: var(--a2);
+            transition: width .3s
+        }
+
+        .links a:hover {
+            color: var(--text)
+        }
+
+        .links a:hover::after {
+            width: 100%
+        }
+
+        .nav-r {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .pill {
+            background: var(--btn);
+            color: var(--btn-text);
+            padding: 8px 18px;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: .82rem;
+            border: 0;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform .2s, box-shadow .2s
+        }
+
+        .pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, .45)
+        }
+
+        .ghost {
+            background: transparent;
+            border: 1px solid var(--line);
+            color: var(--text);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform .4s
+        }
+
+        .ghost:hover {
+            transform: rotate(180deg)
+        }
+
+        /* hero */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 20px;
+            padding: 40px 40px 52px;
+            margin-top: 14px;
+            min-height: 520px;
+            overflow: hidden
+        }
+
+        .stage {
+            position: relative;
+            display: grid;
+            place-items: center;
+            min-height: 360px
+        }
+
+        .tee {
+            width: min(360px, 80%);
+            filter: drop-shadow(0 30px 40px rgba(139, 92, 246, .45));
+            animation: float 5s ease-in-out infinite
+        }
+
+        .tee path {
+            fill: url(#irid)
+        }
+
+        .halo {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--a1), var(--a3), var(--a2), var(--a1));
+            filter: blur(48px);
+            opacity: .55;
+            animation: spin 14s linear infinite
+        }
+
+        .bub {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 28%, #fff9, transparent 35%), linear-gradient(135deg, var(--a3), var(--a1) 55%, var(--a2));
+            opacity: .85;
+            animation: rise 7s ease-in-out infinite
+        }
+
+        .bub:nth-of-type(1) {
+            width: 46px;
+            height: 46px;
+            left: 8%;
+            top: 62%
+        }
+
+        .bub:nth-of-type(2) {
+            width: 26px;
+            height: 26px;
+            right: 12%;
+            top: 24%;
+            animation-delay: -2.5s
+        }
+
+        .bub:nth-of-type(3) {
+            width: 64px;
+            height: 64px;
+            right: 6%;
+            bottom: 8%;
+            animation-delay: -4.5s
+        }
+
+        @keyframes float {
+            50% {
+                transform: translateY(-16px) rotate(-2deg)
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @keyframes rise {
+            50% {
+                transform: translateY(-26px) scale(1.12)
+            }
+        }
+
+        .copy {
+            text-align: center;
+            max-width: 430px;
+            margin-inline: auto
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            line-height: 1.08;
+            font-weight: 800;
+            letter-spacing: -.02em
+        }
+
+        h1 span {
+            display: block;
+            background: linear-gradient(90deg, var(--a1), var(--a3), var(--a2), var(--a1));
+            background-size: 250% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 6s linear infinite
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 250% 0
+            }
+        }
+
+        .copy p {
+            color: var(--muted);
+            margin: 18px 0 26px
+        }
+
+        .cta {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            border: 1px solid var(--line);
+            background: var(--btn);
+            color: var(--btn-text);
+            cursor: pointer;
+            font-size: .95rem;
+            transition: transform .2s, box-shadow .2s
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 138, 61, .35)
+        }
+
+        .btn.alt {
+            background: transparent;
+            color: var(--text)
+        }
+
+        /* entrada de la portada (único momento orquestado) */
+        .in {
+            opacity: 0;
+            transform: translateY(22px);
+            animation: in .8s cubic-bezier(.2, .8, .2, 1) forwards
+        }
+
+        .in:nth-child(1) {
+            animation-delay: .1s
+        }
+
+        .in:nth-child(2) {
+            animation-delay: .3s
+        }
+
+        .in:nth-child(3) {
+            animation-delay: .5s
+        }
+
+        @keyframes in {
+            to {
+                opacity: 1;
+                transform: none
+            }
+        }
+
+        /* cinta */
+        .strip {
+            margin: 26px 0;
+            overflow: hidden;
+            border-block: 1px solid var(--line);
+            padding: 12px 0;
+            white-space: nowrap
+        }
+
+        .strip div {
+            display: inline-block;
+            animation: marq 24s linear infinite;
+            color: var(--muted);
+            font-weight: 600
+        }
+
+        .strip span {
+            margin: 0 22px
+        }
+
+        @keyframes marq {
+            to {
+                transform: translateX(-50%)
+            }
+        }
+
+        section {
+            padding: 56px 0
+        }
+
+        h2 {
+            font-size: clamp(1.7rem, 4vw, 2.3rem);
+            letter-spacing: -.01em;
+            margin-bottom: 14px
+        }
+
+        .about {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 30px;
+            align-items: center;
+            padding: 36px
+        }
+
+        .about p {
+            color: var(--muted);
+            max-width: 60ch
+        }
+
+        .stats {
+            display: grid;
+            gap: 12px
+        }
+
+        .stat {
+            padding: 16px 20px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            display: flex;
+            gap: 14px;
+            align-items: center
+        }
+
+        .stat b {
+            font-size: 1.6rem
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 26px
+        }
+
+        .card {
+            padding: 30px 26px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform .15s ease-out, border-color .3s;
+            transform-style: preserve-3d
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(139, 92, 246, .35), transparent 60%);
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .card:hover::before {
+            opacity: 1
+        }
+
+        .card:hover {
+            border-color: var(--a1)
+        }
+
+        .ico {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            font-size: 1.9rem;
+            margin-bottom: 18px;
+            position: relative;
+            animation: pop 4s ease-in-out infinite
+        }
+
+        .card:nth-child(1) .ico {
+            background: linear-gradient(135deg, var(--a1), var(--a3))
+        }
+
+        .card:nth-child(2) .ico {
+            background: linear-gradient(135deg, var(--a2), var(--a1));
+            animation-delay: -1.3s
+        }
+
+        .card:nth-child(3) .ico {
+            background: linear-gradient(135deg, var(--a3), var(--a2));
+            animation-delay: -2.6s
+        }
+
+        @keyframes pop {
+            50% {
+                transform: translateY(-6px) rotate(-6deg)
+            }
+        }
+
+        .card h3 {
+            margin-bottom: 6px;
+            position: relative
+        }
+
+        .card p {
+            color: var(--muted);
+            font-size: .95rem;
+            position: relative
+        }
+
+        .contact {
+            text-align: center;
+            padding: 48px 24px
+        }
+
+        .contact p {
+            color: var(--muted);
+            margin: 0 auto 24px;
+            max-width: 48ch
+        }
+
+        .contact .btn {
+            position: relative;
+            font-size: 1.05rem;
+            padding: 16px 34px
+        }
+
+        .contact .btn::after {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            border-radius: 16px;
+            border: 2px solid var(--a2);
+            opacity: 0;
+            animation: ping 2.4s ease-out infinite
+        }
+
+        @keyframes ping {
+            0% {
+                opacity: .8;
+                transform: scale(.96)
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(1.15)
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 34px 0 40px;
+            color: var(--muted);
+            font-size: .9rem
+        }
+
+        .social {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 16px;
+            flex-wrap: wrap
+        }
+
+        .social a {
+            padding: 9px 18px;
+            border: 1px solid var(--line);
+            border-radius: 99px;
+            transition: transform .2s, background .2s, color .2s
+        }
+
+        .social a:hover {
+            transform: translateY(-3px);
+            background: var(--btn);
+            color: var(--btn-text)
+        }
+
+        @media (max-width:820px) {
+            .links {
+                display: none
+            }
+
+            nav {
+                padding: 14px 18px
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 26px 20px 38px;
+                min-height: 0
+            }
+
+            .stage {
+                min-height: 280px;
+                order: -1
+            }
+
+            .about {
+                grid-template-columns: 1fr;
+                padding: 26px 20px
+            }
+
+            .cards {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media (prefers-reduced-motion:reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important
+            }
+
+            .in {
+                opacity: 1;
+                transform: none
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+
+    <div class="shell">
+        <header class="glass">
+            <nav aria-label="Principal">
+                <a class="brand" href="#inicio">BuubleCorp</a>
+                <div class="links">
+                    <a href="#inicio">Inicio</a><a href="#nosotros">Nosotros</a><a href="#servicios">Colecciones</a><a
+                        href="#contacto">Contacto</a>
+                </div>
+                <div class="nav-r">
+                    <button class="ghost" id="tema" aria-label="Cambiar entre modo oscuro y claro">🌙</button>
+                    <a class="pill" href="#contacto">Escríbenos</a>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <div class="hero glass" id="inicio">
+                <div class="stage" aria-hidden="true">
+                    <div class="halo"></div>
+                    <i class="bub"></i><i class="bub"></i><i class="bub"></i>
+                    <svg class="tee" viewBox="0 0 200 200" role="img" aria-label="Camiseta BuubleCorp">
+                        <defs>
+                            <linearGradient id="irid" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0" stop-color="#8b5cf6">
+                                    <animate attributeName="stop-color" values="#8b5cf6;#38bdf8;#ff8a3d;#8b5cf6"
+                                        dur="8s" repeatCount="indefinite" />
+                                </stop>
+                                <stop offset=".55" stop-color="#38bdf8">
+                                    <animate attributeName="stop-color" values="#38bdf8;#ff8a3d;#8b5cf6;#38bdf8"
+                                        dur="8s" repeatCount="indefinite" />
+                                </stop>
+                                <stop offset="1" stop-color="#ff8a3d">
+                                    <animate attributeName="stop-color" values="#ff8a3d;#8b5cf6;#38bdf8;#ff8a3d"
+                                        dur="8s" repeatCount="indefinite" />
+                                </stop>
+                            </linearGradient>
+                        </defs>
+                        <path
+                            d="M70 18 L36 34 L8 72 L36 92 L55 76 L55 182 L145 182 L145 76 L164 92 L192 72 L164 34 L130 18 Q100 46 70 18Z" />
+                        <path d="M70 18 Q100 46 130 18" fill="none" stroke="#fff" stroke-opacity=".5"
+                            stroke-width="3" />
+                        <text x="100" y="125" text-anchor="middle" font-size="22" font-weight="800" fill="#fff"
+                            fill-opacity=".92" font-family="Segoe UI,Arial,sans-serif">Buuble</text>
+                    </svg>
+                </div>
+                <div class="copy">
+                    <h1 class="in">BuubleCorp <span>Viste tu propia onda</span></h1>
+                    <p class="in">Ropa con actitud para quienes no pasan desapercibidos. Diseños que brillan, tallas
+                        para todos y estilo de sobra.</p>
+                    <div class="cta in">
+                        <a class="btn" href="#servicios">Ver colecciones</a>
+                        <a class="btn alt" href="#nosotros">Conócenos</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="strip" aria-hidden="true">
+                <div>
+                    <span>✨ Ropa con actitud</span><span>🫧 Edición limitada</span><span>🚚 Envíos a todo el
+                        país</span><span>💜 Hecho para ti</span>
+                    <span>✨ Ropa con actitud</span><span>🫧 Edición limitada</span><span>🚚 Envíos a todo el
+                        país</span><span>💜 Hecho para ti</span>
+                    <span>✨ Ropa con actitud</span><span>🫧 Edición limitada</span><span>🚚 Envíos a todo el
+                        país</span><span>💜 Hecho para ti</span>
+                    <span>✨ Ropa con actitud</span><span>🫧 Edición limitada</span><span>🚚 Envíos a todo el
+                        país</span><span>💜 Hecho para ti</span>
+                </div>
+            </div>
+
+            <section id="nosotros">
+                <div class="about glass">
+                    <div>
+                        <h2>Sobre nosotros</h2>
+                        <p>En BuubleCorp creemos que la ropa es la forma más rápida de contar quién eres. Somos un
+                            negocio de ropa pensado para jóvenes que buscan algo distinto: prendas cómodas, diseños con
+                            personalidad y colores que se notan. Cada pieza se elige con cuidado, para que te vayas de
+                            aquí con un look que sientas tuyo.</p>
+                    </div>
+                    <div class="stats">
+                        <div class="stat"><b>👕</b><span>Prendas únicas y de edición limitada</span></div>
+                        <div class="stat"><b>🎨</b><span>Diseños que puedes personalizar</span></div>
+                        <div class="stat"><b>🚚</b><span>Pedidos fáciles, entrega segura</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="servicios">
+                <h2>Lo que tenemos para ti</h2>
+                <div class="cards">
+                    <article class="card glass">
+                        <div class="ico" aria-hidden="true">👕</div>
+                        <h3>Colección Urbana</h3>
+                        <p>Camisetas, sudaderas y gorras con estilo de calle. Cómodas para todo el día y listas para
+                            cualquier plan.</p>
+                    </article>
+                    <article class="card glass">
+                        <div class="ico" aria-hidden="true">🎨</div>
+                        <h3>Diseños personalizados</h3>
+                        <p>Cuéntanos tu idea y la convertimos en una prenda única: tu nombre, tu equipo o tu frase
+                            favorita.</p>
+                    </article>
+                    <article class="card glass">
+                        <div class="ico" aria-hidden="true">🚚</div>
+                        <h3>Pedidos y envíos</h3>
+                        <p>Elige tus prendas, confirma por mensaje y recíbelas donde estés. Rápido, claro y sin
+                            complicaciones.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section id="contacto">
+                <div class="contact glass">
+                    <h2>¿Listo para estrenar?</h2>
+                    <p>Escríbenos y te ayudamos a elegir tu próxima prenda favorita.</p>
+                    <a class="btn" id="mail"
+                        href="mailto:juanfransoloj521@gmail.com?subject=Quiero%20informaci%C3%B3n%20de%20BuubleCorp&body=Hola%20BuubleCorp%2C%20me%20interesa%20">✉️
+                        Contáctanos por correo</a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <!-- Cambia los "#" por los enlaces reales de tus redes -->
+            <div class="social">
+                <a href="#" aria-label="Instagram de BuubleCorp">📸 Instagram</a>
+                <a href="#" aria-label="Facebook de BuubleCorp">👍 Facebook</a>
+                <a href="#" aria-label="TikTok de BuubleCorp">🎵 TikTok</a>
+                <a href="#" aria-label="WhatsApp de BuubleCorp">💬 WhatsApp</a>
+            </div>
+            <p>© <span id="anio"></span> BuubleCorp. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        // año del pie de página
+        document.getElementById('anio').textContent = new Date().getFullYear();
+
+        // modo oscuro / claro
+        const root = document.documentElement, btn = document.getElementById('tema');
+        btn.addEventListener('click', () => {
+            const claro = root.dataset.theme === 'dark';
+            root.dataset.theme = claro ? 'light' : 'dark';
+            btn.textContent = claro ? '☀️' : '🌙';
+        });
+
+        // brillo que sigue al cursor + inclinación suave en tarjetas
+        document.querySelectorAll('.card').forEach(c => {
+            c.addEventListener('pointermove', e => {
+                const r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+                c.style.setProperty('--mx', x + 'px'); c.style.setProperty('--my', y + 'px');
+                c.style.transform = `perspective(700px) rotateX(${((y / r.height) - .5) * -8}deg) rotateY(${((x / r.width) - .5) * 8}deg) translateY(-4px)`;
+            });
+            c.addEventListener('pointerleave', () => c.style.transform = '');
+        });
+    </script>
+</body>
+
+</html>
